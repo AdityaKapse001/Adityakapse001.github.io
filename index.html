@@ -93,8 +93,30 @@ nav a:hover{ color:var(--text); background:rgba(255,255,255,0.06); }
 @keyframes float{ 0%,100%{ transform:translateY(0) scale(1); } 50%{ transform:translateY(-30px) scale(1.06); } }
 .hero-grid{ position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px); background-size:64px 64px; mask-image:radial-gradient(60% 60% at 50% 40%, black, transparent 75%); }
 .hero-content{ position:relative; z-index:2; width:100%; text-align:center; }
-.hero h1{ font-family:'Sora',sans-serif; font-weight:800; font-size:clamp(46px,9vw,110px); letter-spacing:-0.02em; line-height:1; }
+.hero h1{ font-family:'Sora',sans-serif; font-weight:800; font-size:clamp(46px,9vw,110px); letter-spacing:-0.02em; line-height:1; position:relative; transition:transform .35s cubic-bezier(.16,.84,.44,1); transform-style:preserve-3d; }
 .hero .grad{ background:linear-gradient(90deg,var(--cyan),var(--violet)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+/* ---------------- HERO NAME REVEAL ---------------- */
+.hero h1 .char{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(70px) rotateX(-75deg) scale(.65);
+  filter:blur(9px);
+  transform-origin:50% 100%;
+  animation:charIn 1s cubic-bezier(.16,.84,.44,1) forwards;
+  will-change:transform, opacity, filter;
+}
+.hero h1 .char.space{ width:.3em; }
+@keyframes charIn{ to{ opacity:1; transform:translateY(0) rotateX(0) scale(1); filter:blur(0); } }
+.hero h1 .grad.char{ background-size:220% auto; animation:charIn 1s cubic-bezier(.16,.84,.44,1) forwards, gradShift 4.5s ease-in-out .9s infinite; }
+@keyframes gradShift{ 0%,100%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } }
+.hero-name-underline{
+  display:block; height:3px; width:0; margin:16px auto 0; border-radius:3px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  box-shadow:0 0 14px rgba(53,225,214,.65);
+  animation:underlineGrow .9s cubic-bezier(.16,.84,.44,1) 1.15s forwards;
+}
+@keyframes underlineGrow{ to{ width:130px; } }
 .hero .role{ margin-top:20px; font-size:clamp(16px,2vw,22px); color:var(--muted); font-weight:500; }
 .hero .cta-row{ margin-top:34px; display:flex; justify-content:center; gap:16px; flex-wrap:wrap; }
 .btn{ font-family:'Inter',sans-serif; font-size:14.5px; font-weight:600; padding:13px 26px; border-radius:30px; transition:all .25s; }
@@ -304,7 +326,8 @@ footer .fine{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(
   <div class="blob b2"></div>
   <div class="blob b3"></div>
   <div class="hero-content wrap">
-    <h1>Aditya <span class="grad">Kapse</span></h1>
+    <h1 id="heroName">Aditya <span class="grad">Kapse</span></h1>
+    <span class="hero-name-underline"></span>
     <div class="role">Cloud Computing &amp; Networking Enthusiast</div>
     <div class="cta-row">
       <a class="btn solid glow-hover" href="#contact">Contact Me</a>
@@ -348,7 +371,7 @@ footer .fine{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(
           </div>
           <div class="tab-content">
             <div class="tab-pane active" id="tab-edu">
-              <div class="edu-item"><div class="when">2024–25 · SGPA 7.09</div><h4>BCA (Bachelor of Computer Applications)</h4><div class="inst">Sri Balaji University, Pune</div></div>
+              <div class="edu-item"><div class="when">2023–26 · CGPA 7.09</div><h4>BCA (Bachelor of Computer Applications)</h4><div class="inst">Sri Balaji University, Pune</div></div>
               <div class="edu-item"><div class="when">2022 · 71.83%</div><h4>HSC (12th) — Science</h4><div class="inst">Maharashtra State Board</div></div>
               <div class="edu-item"><div class="when">2020 · 84.80%</div><h4>SSC (10th)</h4><div class="inst">Maharashtra State Board</div></div>
               <div class="lang-row"><span>English</span><span>Hindi</span><span>Marathi</span></div>
@@ -631,6 +654,48 @@ document.querySelectorAll('.glow-hover').forEach(el => {
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
 })();
 
+/* hero name: split into animated letters */
+(function(){
+  const h1 = document.getElementById('heroName');
+  if(!h1) return;
+  const gradSpan = h1.querySelector('.grad');
+  const textNode = Array.from(h1.childNodes).find(n => n.nodeType === 3 && n.textContent.trim().length);
+  if(!textNode) return;
+  const frag = document.createDocumentFragment();
+  let i = 0;
+  textNode.textContent.split('').forEach(ch => {
+    const span = document.createElement('span');
+    span.className = 'char' + (ch === ' ' ? ' space' : '');
+    span.textContent = ch === ' ' ? '\u00A0' : ch;
+    span.style.animationDelay = (i * 45) + 'ms';
+    frag.appendChild(span);
+    i++;
+  });
+  h1.replaceChild(frag, textNode);
+  if(gradSpan){
+    gradSpan.classList.add('char');
+    gradSpan.style.animationDelay = (i * 45 + 90) + 'ms';
+  }
+})();
+
+/* hero name: subtle 3D mouse tilt */
+(function(){
+  const h1 = document.getElementById('heroName');
+  const heroContent = document.querySelector('.hero-content');
+  if(!h1 || !heroContent) return;
+  if(window.matchMedia('(hover:none)').matches) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  heroContent.addEventListener('mousemove', (e) => {
+    const r = h1.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    h1.style.transform = `perspective(900px) rotateX(${py * -9}deg) rotateY(${px * 13}deg)`;
+  });
+  heroContent.addEventListener('mouseleave', () => {
+    h1.style.transform = 'perspective(900px) rotateX(0) rotateY(0)';
+  });
+})();
+
 /* nav */
 const navToggle = document.getElementById('navToggle');
 const navList = document.getElementById('navList');
@@ -679,7 +744,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     const statusEl = document.getElementById('ghStatus');
     if(statusEl){
       statusEl.textContent = (user.followers === 0)
-        ? '🌱 New to GitHub — building in public, starting here.'
+        ? '🌱  building in public, starting here.'
         : `${user.followers} follower${user.followers === 1 ? '' : 's'} · ${user.following} following`;
     }
 

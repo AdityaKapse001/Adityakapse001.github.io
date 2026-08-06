@@ -85,52 +85,52 @@ nav a:hover{ color:var(--text); background:rgba(255,255,255,0.06); }
 }
 
 /* ---------------- HERO ---------------- */
-.hero{ position:relative; min-height:92vh; display:flex; align-items:center; overflow:hidden; }
+.hero{ position:relative; min-height:94vh; display:flex; align-items:center; overflow:hidden; }
+.hero-canvas{ position:absolute; inset:0; width:100%; height:100%; z-index:0; opacity:0.5; }
+.blob-wrap{ position:absolute; inset:0; pointer-events:none; will-change:transform; transition:transform .3s ease-out; }
 .hero .blob{ position:absolute; border-radius:50%; filter:blur(60px); opacity:0.55; animation:float 10s ease-in-out infinite; }
 .hero .blob.b1{ width:420px; height:420px; top:-120px; left:30%; background:radial-gradient(circle,rgba(53,225,214,0.5),transparent 70%); }
 .hero .blob.b2{ width:340px; height:340px; bottom:-80px; right:14%; background:radial-gradient(circle,rgba(140,107,255,0.5),transparent 70%); animation-delay:-3s; }
 .hero .blob.b3{ width:260px; height:260px; top:40%; left:6%; background:radial-gradient(circle,rgba(255,107,193,0.35),transparent 70%); animation-delay:-6s; }
 @keyframes float{ 0%,100%{ transform:translateY(0) scale(1); } 50%{ transform:translateY(-30px) scale(1.06); } }
 .hero-grid{ position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px); background-size:64px 64px; mask-image:radial-gradient(60% 60% at 50% 40%, black, transparent 75%); }
-.hero-content{ position:relative; z-index:2; width:100%; text-align:center; }
-.hero h1{ font-family:'Sora',sans-serif; font-weight:800; font-size:clamp(46px,9vw,110px); letter-spacing:-0.02em; line-height:1; position:relative; transition:transform .35s cubic-bezier(.16,.84,.44,1); transform-style:preserve-3d; }
-.hero .grad{ background:linear-gradient(90deg,var(--cyan),var(--violet)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.hero-content{ position:relative; z-index:2; width:100%; text-align:center; will-change:transform,opacity; }
 
-/* ---------------- HERO NAME REVEAL ---------------- */
-.hero h1 .char{
-  display:inline-block;
-  opacity:0;
-  transform:translateY(70px) rotateX(-75deg) scale(.65);
-  filter:blur(9px);
-  transform-origin:50% 100%;
-  animation:charIn 1s cubic-bezier(.16,.84,.44,1) forwards;
-  will-change:transform, opacity, filter;
+.hero-badge{ display:inline-flex; align-items:center; gap:9px; padding:9px 18px; border-radius:30px; background:rgba(53,225,214,0.08); border:1px solid rgba(53,225,214,0.3); font-size:12.5px; color:var(--cyan); font-family:'JetBrains Mono',monospace; margin-bottom:26px; opacity:0; animation:badgeIn .8s .1s cubic-bezier(.16,.84,.44,1) forwards; }
+.hero-badge .pulse-dot{ width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan); animation:blink 1.8s infinite; }
+@keyframes badgeIn{ from{ opacity:0; transform:translateY(-14px);} to{ opacity:1; transform:translateY(0);} }
+
+.hero-aura{ position:absolute; left:50%; top:48%; width:640px; height:320px; transform:translate(-50%,-50%); background:radial-gradient(ellipse, rgba(53,225,214,0.16), transparent 70%); filter:blur(50px); animation:auraPulse 4.5s ease-in-out infinite; pointer-events:none; z-index:0; }
+@keyframes auraPulse{ 0%,100%{ opacity:.5; transform:translate(-50%,-50%) scale(1);} 50%{ opacity:.95; transform:translate(-50%,-50%) scale(1.15);} }
+
+.hero h1{ font-family:'Sora',sans-serif; font-weight:800; font-size:clamp(46px,9vw,110px); letter-spacing:-0.02em; line-height:1; position:relative; z-index:1; }
+.hero h1 .letter{ display:inline-block; opacity:0; transform:translateY(55px) rotate(8deg); animation:letterIn .75s cubic-bezier(.16,.84,.44,1) forwards; }
+@keyframes letterIn{ to{ opacity:1; transform:translateY(0) rotate(0deg); } }
+.hero h1 .space{ display:inline-block; width:0.28em; }
+.hero .grad{
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink),var(--cyan));
+  background-size:300% 100%; -webkit-background-clip:text; background-clip:text; color:transparent;
+  display:inline-block; opacity:0; transform:translateY(30px) scale(0.9);
+  animation:gradWordIn .8s cubic-bezier(.2,.9,.25,1.2) forwards, gradShift 7s linear infinite;
+  animation-delay:0.7s, 1.5s;
 }
-.hero h1 .char.space{ width:.3em; }
-@keyframes charIn{ to{ opacity:1; transform:translateY(0) rotateX(0) scale(1); filter:blur(0); } }
-.hero h1 .grad.char{ background-size:220% auto; animation:charIn 1s cubic-bezier(.16,.84,.44,1) forwards, gradShift 4.5s ease-in-out .9s infinite; }
-@keyframes gradShift{ 0%,100%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } }
-.hero-name-underline{
-  display:block; height:3px; width:0; margin:16px auto 0; border-radius:3px;
-  background:linear-gradient(90deg,var(--cyan),var(--violet));
-  box-shadow:0 0 14px rgba(53,225,214,.65);
-  animation:underlineGrow .9s cubic-bezier(.16,.84,.44,1) 1.15s forwards;
-}
-@keyframes underlineGrow{ to{ width:130px; } }
-.hero .role{ margin-top:20px; font-size:clamp(16px,2vw,22px); color:var(--muted); font-weight:500; }
-.hero .cta-row{ margin-top:34px; display:flex; justify-content:center; gap:16px; flex-wrap:wrap; }
-.btn{ font-family:'Inter',sans-serif; font-size:14.5px; font-weight:600; padding:13px 26px; border-radius:30px; transition:all .25s; }
+@keyframes gradWordIn{ to{ opacity:1; transform:translateY(0) scale(1); } }
+@keyframes gradShift{ 0%{ background-position:0% 50%;} 100%{ background-position:300% 50%;} }
+
+.hero .role{ margin-top:22px; font-size:clamp(16px,2vw,22px); color:var(--muted); font-weight:500; opacity:0; animation:badgeIn .8s 1.5s cubic-bezier(.16,.84,.44,1) forwards; }
+.hero .cta-row{ margin-top:34px; display:flex; justify-content:center; gap:16px; flex-wrap:wrap; opacity:0; animation:badgeIn .8s 1.7s cubic-bezier(.16,.84,.44,1) forwards; }
+.btn{ font-family:'Inter',sans-serif; font-size:14.5px; font-weight:600; padding:13px 26px; border-radius:30px; transition:transform .15s ease-out, box-shadow .25s; will-change:transform; }
 .btn.solid{ background:#fff; color:#04110f; }
-.btn.solid:hover{ transform:scale(1.05); }
+.btn.solid:hover{ box-shadow:0 8px 30px rgba(255,255,255,0.25); }
 .btn.outline{ border:1px solid rgba(255,255,255,0.25); color:var(--text); }
-.btn.outline:hover{ background:rgba(255,255,255,0.08); transform:scale(1.05); }
-.hero .socials{ margin-top:30px; display:flex; justify-content:center; gap:22px; }
+.btn.outline:hover{ background:rgba(255,255,255,0.08); box-shadow:0 8px 30px rgba(53,225,214,0.15); }
+.hero .socials{ margin-top:30px; display:flex; justify-content:center; gap:22px; opacity:0; animation:badgeIn .8s 1.9s cubic-bezier(.16,.84,.44,1) forwards; }
 .hero .socials a{ color:var(--muted); font-size:20px; transition:color .2s, transform .2s; }
-.hero .socials a:hover{ color:var(--cyan); transform:translateY(-3px); }
-.scroll-pill{ margin:38px auto 0; width:30px; height:48px; border:2px solid rgba(255,255,255,0.35); border-radius:20px; display:flex; justify-content:center; padding-top:8px; }
+.hero .socials a:hover{ color:var(--cyan); transform:translateY(-3px) scale(1.15); }
+.scroll-pill{ margin:38px auto 0; width:30px; height:48px; border:2px solid rgba(255,255,255,0.35); border-radius:20px; display:flex; justify-content:center; padding-top:8px; opacity:0; animation:badgeIn .8s 2.1s cubic-bezier(.16,.84,.44,1) forwards; }
 .scroll-pill .dot{ width:6px; height:6px; border-radius:50%; background:var(--cyan); animation:bounce 1.6s infinite; }
 @keyframes bounce{ 0%,100%{ transform:translateY(0); opacity:1;} 50%{ transform:translateY(14px); opacity:0.3;} }
-.scroll-label{ text-align:center; font-size:11.5px; color:var(--muted); margin-top:8px; letter-spacing:.08em; }
+.scroll-label{ text-align:center; font-size:11.5px; color:var(--muted); margin-top:8px; letter-spacing:.08em; opacity:0; animation:badgeIn .8s 2.1s cubic-bezier(.16,.84,.44,1) forwards; }
 
 /* ---------------- SECTION GENERIC ---------------- */
 section{ position:relative; z-index:1; padding:90px 0; border-top:1px solid var(--line); }
@@ -211,7 +211,12 @@ section{ position:relative; z-index:1; padding:90px 0; border-top:1px solid var(
 .playground-hint{ position:absolute; bottom:14px; left:50%; transform:translateX(-50%); font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
 
 /* ---------------- PROJECT SPOTLIGHT ---------------- */
-.project-card{ display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:center; }
+.project-card{ display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:center; margin-bottom:70px; }
+.project-card:last-child{ margin-bottom:0; }
+.project-card.reverse .project-visual{ order:2; }
+.project-card.reverse .project-info{ order:1; }
+.proj-btn-row{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+.proj-note{ font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
 .project-visual{ background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:30px; aspect-ratio:4/3; display:flex; align-items:center; justify-content:center; }
 .project-visual svg{ width:100%; height:100%; }
 .project-info .pill{ display:inline-block; font-size:12px; font-weight:600; padding:6px 14px; border-radius:20px; border:1px solid var(--cyan); color:var(--cyan); margin-bottom:16px; }
@@ -320,18 +325,20 @@ footer .fine{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(
   </div>
 </header>
 
-<section class="hero">
+<section class="hero" id="heroSection">
+  <canvas id="netCanvas" class="hero-canvas"></canvas>
   <div class="hero-grid"></div>
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
-  <div class="hero-content wrap">
-    <h1 id="heroName">Aditya <span class="grad">Kapse</span></h1>
-    <span class="hero-name-underline"></span>
+  <div class="hero-aura"></div>
+  <div class="blob-wrap" data-depth="18"><div class="blob b1"></div></div>
+  <div class="blob-wrap" data-depth="28"><div class="blob b2"></div></div>
+  <div class="blob-wrap" data-depth="12"><div class="blob b3"></div></div>
+  <div class="hero-content wrap" id="heroContent">
+    <div class="hero-badge"><span class="pulse-dot"></span> Available for full-time opportunities</div>
+    <h1 id="heroName"></h1>
     <div class="role">Cloud Computing &amp; Networking Enthusiast</div>
     <div class="cta-row">
-      <a class="btn solid glow-hover" href="#contact">Contact Me</a>
-      <a class="btn outline glow-hover" href="https://www.linkedin.com/in/aditya-kapse-991a41284/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn solid glow-hover magnetic" href="#contact">Contact Me</a>
+      <a class="btn outline glow-hover magnetic" href="https://www.linkedin.com/in/aditya-kapse-991a41284/" target="_blank" rel="noopener">LinkedIn</a>
     </div>
     <div class="socials">
       <a href="https://github.com/AdityaKapse001" target="_blank" rel="noopener" aria-label="GitHub"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.63.069-.63 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg></a>
@@ -378,9 +385,9 @@ footer .fine{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(
             </div>
             <div class="tab-pane" id="tab-obj">
               <div class="about-text">
-                <p>Detail-oriented <strong>BCA student and IT support professional</strong> with hands-on experience in SAP system operations, network and server administration, cloud computing, and cybersecurity fundamentals.</p>
+                <p>Detail-oriented <strong>MCA (Pursuing) and BCA (Completed)</strong> with hands-on experience in network and server administration, cloud computing, and cybersecurity fundamentals.</p>
                 <p>Proven ability to keep enterprise IT systems running smoothly — gained through a full-time <strong>EDP Executive</strong> role at MK Tron India Pvt. Ltd., alongside cloud application development experience at <strong>Codingera</strong>.</p>
-                <p>Seeking a full-time opportunity to apply expertise in SAP support, network administration, and cloud technologies to deliver reliable, secure IT solutions.</p>
+                <p>Seeking a full-time opportunity to apply expertise in Network administration, and cloud technologies to deliver reliable, secure IT solutions.</p>
               </div>
             </div>
           </div>
@@ -417,10 +424,11 @@ footer .fine{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(
 <section id="project">
   <div class="wrap reveal">
     <div class="section-head">
-      <span class="tag">// featured project</span>
+      <span class="tag">// featured projects</span>
       <h2>What I've <span class="grad">built</span></h2>
     </div>
-    <div class="project-card">
+
+    <div class="project-card reveal-child">
       <div class="project-visual">
         <svg viewBox="0 0 300 240" fill="none">
           <rect x="10" y="150" width="40" height="40" rx="6" fill="#1c2740"/>
@@ -450,7 +458,47 @@ footer .fine{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(
         </ul>
         <div class="feat-label">Tech stack</div>
         <div class="stack-row"><span>Cloud Platforms</span><span>Cloud Deployment</span><span>ETL Pipeline</span></div>
-        <a class="btn outline glow-hover" href="https://github.com/AdityaKapse001" target="_blank" rel="noopener">View GitHub profile</a>
+        <div class="proj-btn-row">
+          <a class="btn outline glow-hover" href="https://github.com/AdityaKapse001/iot-sensor-etl" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reverse reveal-child">
+      <div class="project-visual">
+        <svg viewBox="0 0 300 240" fill="none">
+          <path d="M150 30l55 24v42c0 45-24 74-55 84-31-10-55-39-55-84V54l55-24z" fill="#10162a" stroke="var(--cyan)" stroke-width="1.8"/>
+          <rect x="128" y="108" width="44" height="34" rx="5" fill="none" stroke="var(--violet)" stroke-width="2"/>
+          <path d="M136 108v-12a14 14 0 0128 0v12" fill="none" stroke="var(--violet)" stroke-width="2"/>
+          <circle cx="150" cy="124" r="4" fill="var(--cyan)"><animate attributeName="opacity" values="1;0.3;1" dur="1.4s" repeatCount="indefinite"/></circle>
+          <path d="M60 190c0-14 12-24 26-24 3-16 17-27 33-27 15 0 28 10 32 24 15 1 27 13 27 27" fill="none" stroke="var(--cyan)" stroke-width="1.6" opacity="0.6"/>
+          <rect x="20" y="40" width="34" height="26" rx="4" fill="#1c2740"/>
+          <rect x="27" y="49" width="20" height="4" rx="1" fill="var(--cyan)"/>
+          <rect x="27" y="57" width="14" height="4" rx="1" fill="var(--violet)"/>
+          <rect x="246" y="170" width="34" height="26" rx="4" fill="#1c2740"/>
+          <rect x="253" y="179" width="20" height="4" rx="1" fill="var(--violet)"/>
+          <rect x="253" y="187" width="14" height="4" rx="1" fill="var(--cyan)"/>
+          <path d="M54 53 L128 118" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" values="0;-16" dur="1.2s" repeatCount="indefinite"/></path>
+          <path d="M172 118 L246 183" stroke="var(--violet)" stroke-width="1.5" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" values="0;-16" dur="1.2s" repeatCount="indefinite"/></path>
+        </svg>
+      </div>
+      <div class="project-info">
+        <span class="pill">Full-Stack Cloud Security</span>
+        <h3>SecureCloudVault</h3>
+        <p class="desc">A full-stack secure cloud storage platform that lets users authenticate, upload, and manage files with a protected API layer and cloud storage backend — built with a modern, responsive SaaS-style dashboard.</p>
+        <div class="feat-label">Key highlights</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>User authentication &amp; secure access control</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Secure file upload, management &amp; cloud storage integration</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Protected API routes with database-backed persistence</li>
+        </ul>
+        <div class="feat-label">Tech stack</div>
+        <div class="stack-row"><span>Node.js</span><span>AWS</span><span>REST API</span><span>DevOps</span></div>
+        <div class="proj-btn-row">
+          <a class="btn solid glow-hover" href="https://securecloudvault-api.onrender.com" target="_blank" rel="noopener">▶ Watch Live</a>
+          <a class="btn outline glow-hover" href="https://github.com/AdityaKapse001/SecureCloudVault" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+        <div class="proj-note">Hosted on a free Render instance — first load can take ~30–50s to wake up.</div>
       </div>
     </div>
   </div>
@@ -466,10 +514,10 @@ footer .fine{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(
       <div class="tl-item reveal-child">
         <div class="tl-dot"></div>
         <div class="when">Apr 2026 – Jul 2026</div>
-        <h3>EDP Executive — SAP &amp; Network/Server Support</h3>
+        <h3>EDP Executive — Network/Server Storage management</h3>
         <div class="org">Reliable HR Solutions, deployed on-site at MK Tron India Pvt. Ltd., Pune</div>
         <ul>
-          <li>Operated and supported the organization's SAP server, ensuring smooth day-to-day system performance and reliability.</li>
+          <li>Operated and supported the organization's SAP server - storage Management, performance and reliability.</li>
           <li>Managed and maintained enterprise network infrastructure and servers, monitoring performance, uptime, and security.</li>
           <li>Delivered general IT support and troubleshooting across departments, resolving hardware, software, and connectivity issues.</li>
           <li>Collaborated with cross-functional teams to support business-critical IT operations, earning recognition for sincerity and professionalism.</li>
@@ -654,46 +702,98 @@ document.querySelectorAll('.glow-hover').forEach(el => {
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
 })();
 
-/* hero name: split into animated letters */
+/* build animated name letters: "Aditya" cascades letter-by-letter, "Kapse" is a shimmering gradient word */
 (function(){
-  const h1 = document.getElementById('heroName');
-  if(!h1) return;
-  const gradSpan = h1.querySelector('.grad');
-  const textNode = Array.from(h1.childNodes).find(n => n.nodeType === 3 && n.textContent.trim().length);
-  if(!textNode) return;
-  const frag = document.createDocumentFragment();
-  let i = 0;
-  textNode.textContent.split('').forEach(ch => {
-    const span = document.createElement('span');
-    span.className = 'char' + (ch === ' ' ? ' space' : '');
-    span.textContent = ch === ' ' ? '\u00A0' : ch;
-    span.style.animationDelay = (i * 45) + 'ms';
-    frag.appendChild(span);
-    i++;
+  const el = document.getElementById('heroName');
+  const first = 'Aditya', last = 'Kapse';
+  let html = '';
+  let delay = 0.15;
+  first.split('').forEach(ch => {
+    html += `<span class="letter" style="animation-delay:${delay.toFixed(2)}s">${ch}</span>`;
+    delay += 0.045;
   });
-  h1.replaceChild(frag, textNode);
-  if(gradSpan){
-    gradSpan.classList.add('char');
-    gradSpan.style.animationDelay = (i * 45 + 90) + 'ms';
-  }
+  html += '<span class="space"></span>';
+  html += `<span class="grad">${last}</span>`;
+  el.innerHTML = html;
 })();
 
-/* hero name: subtle 3D mouse tilt */
+/* subtle network topology canvas behind hero */
 (function(){
-  const h1 = document.getElementById('heroName');
-  const heroContent = document.querySelector('.hero-content');
-  if(!h1 || !heroContent) return;
-  if(window.matchMedia('(hover:none)').matches) return;
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  heroContent.addEventListener('mousemove', (e) => {
-    const r = h1.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5;
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    h1.style.transform = `perspective(900px) rotateX(${py * -9}deg) rotateY(${px * 13}deg)`;
+  const canvas = document.getElementById('netCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, nodes;
+  function resize(){ w = canvas.width = canvas.offsetWidth * devicePixelRatio; h = canvas.height = canvas.offsetHeight * devicePixelRatio; }
+  function init(){
+    resize();
+    const count = w < 700*devicePixelRatio ? 14 : 26;
+    nodes = Array.from({length:count}, () => ({
+      x: Math.random()*w, y: Math.random()*h,
+      vx: (Math.random()-0.5)*0.12, vy: (Math.random()-0.5)*0.12, r: 1.5 + Math.random()*1.5
+    }));
+  }
+  function dist(a,b){ return Math.hypot(a.x-b.x, a.y-b.y); }
+  function step(){
+    ctx.clearRect(0,0,w,h);
+    nodes.forEach(n => { n.x+=n.vx; n.y+=n.vy; if(n.x<0||n.x>w) n.vx*=-1; if(n.y<0||n.y>h) n.vy*=-1; });
+    const maxD = w*0.16;
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const d = dist(nodes[i], nodes[j]);
+        if(d < maxD){
+          ctx.strokeStyle = `rgba(53,225,214,${(1-d/maxD)*0.18})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y); ctx.stroke();
+        }
+      }
+    }
+    nodes.forEach(n => { ctx.fillStyle='rgba(234,240,255,0.4)'; ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fill(); });
+    requestAnimationFrame(step);
+  }
+  window.addEventListener('resize', init);
+  init();
+  requestAnimationFrame(step);
+})();
+
+/* mouse parallax on hero blobs */
+(function(){
+  const hero = document.getElementById('heroSection');
+  if(!hero) return;
+  hero.addEventListener('mousemove', (e) => {
+    const r = hero.getBoundingClientRect();
+    const cx = (e.clientX - r.left)/r.width - 0.5;
+    const cy = (e.clientY - r.top)/r.height - 0.5;
+    document.querySelectorAll('.blob-wrap').forEach(w => {
+      const depth = parseFloat(w.dataset.depth || 15);
+      w.style.transform = `translate(${cx*depth*2}px, ${cy*depth*2}px)`;
+    });
   });
-  heroContent.addEventListener('mouseleave', () => {
-    h1.style.transform = 'perspective(900px) rotateX(0) rotateY(0)';
+})();
+
+/* magnetic buttons */
+document.querySelectorAll('.magnetic').forEach(btn => {
+  btn.addEventListener('mousemove', (e) => {
+    const r = btn.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width/2;
+    const y = e.clientY - r.top - r.height/2;
+    btn.style.transform = `translate(${x*0.28}px, ${y*0.38}px) scale(1.04)`;
   });
+  btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+});
+
+/* hero scroll fade/scale-out for a premium departing effect */
+(function(){
+  const heroContent = document.getElementById('heroContent');
+  const heroSection = document.getElementById('heroSection');
+  if(!heroContent || !heroSection) return;
+  let ticking = false;
+  function update(){
+    const h = heroSection.offsetHeight;
+    const p = Math.min(window.scrollY / (h * 0.85), 1);
+    heroContent.style.opacity = String(1 - p);
+    heroContent.style.transform = `translateY(${p*50}px) scale(${1 - p*0.06})`;
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => { if(!ticking){ requestAnimationFrame(update); ticking = true; } }, { passive:true });
 })();
 
 /* nav */
@@ -744,7 +844,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     const statusEl = document.getElementById('ghStatus');
     if(statusEl){
       statusEl.textContent = (user.followers === 0)
-        ? '🌱  building in public, starting here.'
+        ? '_'
         : `${user.followers} follower${user.followers === 1 ? '' : 's'} · ${user.following} following`;
     }
 
